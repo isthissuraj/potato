@@ -5,14 +5,15 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:potato/model.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class SearchScreen extends StatefulWidget {
+  String query;
+  SearchScreen(this.query, {super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<SearchScreen> createState() => _SearchScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _SearchScreenState extends State<SearchScreen> {
   final TextStyle _AppBarFont = const TextStyle(
       fontStyle: FontStyle.italic,
       fontWeight: FontWeight.bold,
@@ -20,25 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
       color: Color(0xffc29843));
 
   var searchController = TextEditingController();
-  List reciptCatList = [
-    {
-      "imgUrl": "https://images.unsplash.com/photo-1593560704563-f176a2eb61db",
-      "heading": "Chilli Food"
-    },
-    {
-      "imgUrl": "https://images.unsplash.com/photo-1593560704563-f176a2eb61db",
-      "heading": "South Indian"
-    },
-    {
-      "imgUrl": "https://images.unsplash.com/photo-1593560704563-f176a2eb61db",
-      "heading": "Punjabi"
-    },
-    {
-      "imgUrl": "https://images.unsplash.com/photo-1593560704563-f176a2eb61db",
-      "heading": "Chinese Food"
-    }
-  ];
-
+  bool isLoading = true;
   List<RecipeModel> recipeList = <RecipeModel>[];
 
   getRecipe(String query) async {
@@ -56,6 +39,10 @@ class _HomeScreenState extends State<HomeScreen> {
       log(recipeList.toString());
     });
 
+    setState(() {
+      isLoading = false;
+    });
+
     recipeList.forEach((recipe) {
       print(recipe.applabel);
       print(recipe.appcalories);
@@ -66,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getRecipe("burger");
+    getRecipe(widget.query);
   }
 
   @override
@@ -129,92 +116,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         )
                       ],
                     ),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.only(left: 20, right: 20),
-                    child: const Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "What do you want to cook?",
-                          style: TextStyle(
-                              fontSize: 40,
-                              fontWeight: FontWeight.bold,
-                              color: Color(0xffc29843)),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Text(
-                          "Let's cook somethig....",
-                          style:
-                              TextStyle(fontSize: 20, color: Color(0xffc29843)),
-                        )
-                      ],
-                    ),
-                  ),
-                  Container(
-                    decoration:
-                        BoxDecoration(borderRadius: BorderRadius.circular(15)),
-                    height: 100,
-                    child: ListView.builder(
-                        itemCount: reciptCatList.length,
-                        shrinkWrap: true,
-                        scrollDirection: Axis.horizontal,
-                        itemBuilder: (context, index) {
-                          return Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(15)),
-                              child: InkWell(
-                                onTap: () {},
-                                child: Card(
-                                    margin: EdgeInsets.all(20),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(18),
-                                    ),
-                                    elevation: 0.0,
-                                    child: Stack(
-                                      children: [
-                                        ClipRRect(
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                            child: Image.network(
-                                              reciptCatList[index]["imgUrl"],
-                                              fit: BoxFit.cover,
-                                              width: 200,
-                                              height: 250,
-                                            )),
-                                        Positioned(
-                                            left: 0,
-                                            right: 0,
-                                            bottom: 0,
-                                            top: 0,
-                                            child: Container(
-                                                padding: EdgeInsets.symmetric(
-                                                    vertical: 5,
-                                                    horizontal: 10),
-                                                decoration: BoxDecoration(
-                                                    color: Colors.black26,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            15)),
-                                                child: Column(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                      reciptCatList[index]
-                                                          ["heading"],
-                                                      style: TextStyle(
-                                                          color: Colors.white,
-                                                          fontSize: 28),
-                                                    ),
-                                                  ],
-                                                ))),
-                                      ],
-                                    )),
-                              ));
-                        }),
                   ),
                   Container(
                     child: ListView.builder(
