@@ -1,9 +1,11 @@
 import 'dart:convert';
-import 'dart:developer';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:potato/model.dart';
+import 'package:potato/recipeview.dart';
+import 'package:potato/searchscreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -13,6 +15,23 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  bool isLoading = true;
+  List<String> randomRecipeList = [
+    "laddo",
+    "burger",
+    "pizza",
+    "lemonade",
+    "paratha",
+    "matar paneer",
+    "veg roll",
+    "egg roll"
+  ];
+
+  String getRandomRecipe() {
+    int randomIndex = Random().nextInt(randomRecipeList.length);
+    return randomRecipeList[randomIndex];
+  }
+
   final TextStyle _AppBarFont = const TextStyle(
       fontStyle: FontStyle.italic,
       fontWeight: FontWeight.bold,
@@ -26,15 +45,18 @@ class _HomeScreenState extends State<HomeScreen> {
       "heading": "Chilli Food"
     },
     {
-      "imgUrl": "https://images.unsplash.com/photo-1593560704563-f176a2eb61db",
+      "imgUrl":
+          "https://images.unsplash.com/photo-1589301760014-d929f3979dbc?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
       "heading": "South Indian"
     },
     {
-      "imgUrl": "https://images.unsplash.com/photo-1593560704563-f176a2eb61db",
+      "imgUrl":
+          "https://media.istockphoto.com/id/996188546/photo/assorted-indian-food-for-lunch-or-dinner-rice-lentils-paneer-dal-makhani-naan-chutney-spices.jpg?s=2048x2048&w=is&k=20&c=Z44berq859Vf5IwQK7dRje6pCNEmbHDpG1P__ZNDKUE=",
       "heading": "Punjabi"
     },
     {
-      "imgUrl": "https://images.unsplash.com/photo-1593560704563-f176a2eb61db",
+      "imgUrl":
+          "https://images.unsplash.com/photo-1555126634-323283e090fa?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OHx8Y2hpbmVzZSUyMGZvb2R8ZW58MHx8MHx8fDA%3D",
       "heading": "Chinese Food"
     }
   ];
@@ -46,14 +68,19 @@ class _HomeScreenState extends State<HomeScreen> {
         "https://api.edamam.com/api/recipes/v2?type=public&q=$query&app_id=e2d05329&app_key=8ceb35d8b90c0b54b3023e6b058dace2";
     Response response = await get(Uri.parse(url));
     Map data = jsonDecode(response.body);
-    log(response.body.toString());
+    response.body.toString();
     print(data);
 
     data['hits'].forEach((element) {
       RecipeModel recipeModel = RecipeModel();
       recipeModel = RecipeModel.fromMap(element['recipe']);
       recipeList.add(recipeModel);
-      log(recipeList.toString());
+
+      setState(() {
+        isLoading = false;
+      });
+
+      recipeList.toString();
     });
 
     recipeList.forEach((recipe) {
@@ -64,9 +91,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    getRecipe("burger");
+    getRecipe(getRandomRecipe());
   }
 
   @override
@@ -106,7 +132,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 "") {
                               print("blank search");
                             } else {
-                              getRecipe(searchController.text);
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          SearchScreen(searchController.text)));
                             }
                           },
                           child: Container(
@@ -153,6 +183,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
+                  SizedBox(
+                    height: 15,
+                  ),
                   Container(
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(15)),
@@ -166,9 +199,17 @@ class _HomeScreenState extends State<HomeScreen> {
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15)),
                               child: InkWell(
-                                onTap: () {},
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => RecipeView(
+                                              url: reciptCatList[index]
+                                                  .appurl)));
+                                },
                                 child: Card(
-                                    margin: EdgeInsets.all(20),
+                                    margin:
+                                        EdgeInsets.only(left: 15, right: 15),
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(18),
                                     ),
@@ -217,88 +258,100 @@ class _HomeScreenState extends State<HomeScreen> {
                         }),
                   ),
                   Container(
-                    child: ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemCount: recipeList.length,
-                        shrinkWrap: true,
-                        itemBuilder: (context, index) {
-                          return InkWell(
-                              onTap: () {},
-                              child: Card(
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(15)),
-                                margin: EdgeInsets.all(15),
-                                elevation: 0.0,
-                                child: Stack(
-                                  children: [
-                                    ClipRRect(
-                                      borderRadius: BorderRadius.circular(15),
-                                      child: Image.network(
-                                        recipeList[index].appimgurl,
-                                        fit: BoxFit.cover,
-                                        width: double.infinity,
-                                        height: 200,
-                                      ),
-                                    ),
-                                    Positioned(
-                                        left: 0,
-                                        right: 0,
-                                        bottom: 0,
-                                        child: Container(
-                                          padding: EdgeInsets.all(5),
-                                          decoration: const BoxDecoration(
-                                              color: Color(0xfffcdfb2),
-                                              borderRadius: BorderRadius.only(
-                                                  bottomLeft:
-                                                      Radius.circular(15),
-                                                  bottomRight:
-                                                      Radius.circular(15))),
-                                          child: Text(
-                                            recipeList[index].applabel,
-                                            style: const TextStyle(
-                                                color: Color(0xffc29843),
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
+                    child: isLoading
+                        ? CircularProgressIndicator()
+                        : ListView.builder(
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: recipeList.length,
+                            shrinkWrap: true,
+                            itemBuilder: (context, index) {
+                              return InkWell(
+                                  onTap: () {},
+                                  child: Card(
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius:
+                                            BorderRadius.circular(15)),
+                                    margin: EdgeInsets.all(15),
+                                    elevation: 0.0,
+                                    child: Stack(
+                                      children: [
+                                        ClipRRect(
+                                          borderRadius:
+                                              BorderRadius.circular(15),
+                                          child: Image.network(
+                                            recipeList[index].appimgurl,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                            height: 200,
                                           ),
-                                        )),
-                                    Positioned(
-                                        right: 0,
-                                        top: 0,
-                                        height: 40,
-                                        child: Container(
-                                            alignment: Alignment.center,
-                                            padding: EdgeInsets.all(5),
-                                            decoration: BoxDecoration(
-                                                color: Color(0xfffcdfb2),
-                                                borderRadius: BorderRadius.only(
-                                                    topRight:
-                                                        Radius.circular(15),
-                                                    bottomLeft:
-                                                        Radius.circular(15))),
-                                            child: Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.local_fire_department,
-                                                  color: Color.fromARGB(
-                                                      255, 194, 105, 67),
-                                                ),
-                                                Text(
-                                                  recipeList[index]
-                                                      .appcalories
-                                                      .toString()
-                                                      .substring(0, 7),
-                                                  style: const TextStyle(
-                                                      color: Color(0xffc29843),
-                                                      fontSize: 16,
-                                                      fontWeight:
-                                                          FontWeight.bold),
-                                                ),
-                                              ],
-                                            )))
-                                  ],
-                                ),
-                              ));
-                        }),
+                                        ),
+                                        Positioned(
+                                            left: 0,
+                                            right: 0,
+                                            bottom: 0,
+                                            child: Container(
+                                              padding: EdgeInsets.all(5),
+                                              decoration: const BoxDecoration(
+                                                  color: Color(0xfffcdfb2),
+                                                  borderRadius:
+                                                      BorderRadius.only(
+                                                          bottomLeft:
+                                                              Radius.circular(
+                                                                  15),
+                                                          bottomRight:
+                                                              Radius.circular(
+                                                                  15))),
+                                              child: Text(
+                                                recipeList[index].applabel,
+                                                style: const TextStyle(
+                                                    color: Color(0xffc29843),
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                              ),
+                                            )),
+                                        Positioned(
+                                            right: 0,
+                                            top: 0,
+                                            height: 40,
+                                            child: Container(
+                                                alignment: Alignment.center,
+                                                padding: EdgeInsets.all(5),
+                                                decoration: BoxDecoration(
+                                                    color: Color(0xfffcdfb2),
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                            topRight: Radius
+                                                                .circular(15),
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    15))),
+                                                child: Row(
+                                                  children: [
+                                                    Icon(
+                                                      Icons
+                                                          .local_fire_department,
+                                                      color: Color.fromARGB(
+                                                          255, 194, 105, 67),
+                                                    ),
+                                                    Text(
+                                                      recipeList[index]
+                                                          .appcalories
+                                                          .toString()
+                                                          .substring(0, 7),
+                                                      style: const TextStyle(
+                                                          color:
+                                                              Color(0xffc29843),
+                                                          fontSize: 16,
+                                                          fontWeight:
+                                                              FontWeight.bold),
+                                                    ),
+                                                  ],
+                                                )))
+                                      ],
+                                    ),
+                                  ));
+                            }),
                   )
                 ],
               ),
