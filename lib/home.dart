@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
   List reciptCatList = [
     {
       "imgUrl": "https://images.unsplash.com/photo-1593560704563-f176a2eb61db",
-      "heading": "Chilli Food"
+      "heading": "Spicy Food"
     },
     {
       "imgUrl":
@@ -186,6 +186,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   SizedBox(
                     height: 15,
                   ),
+
+                  // Category container
+
                   Container(
                     decoration:
                         BoxDecoration(borderRadius: BorderRadius.circular(15)),
@@ -203,9 +206,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (context) => RecipeView(
-                                              url: reciptCatList[index]
-                                                  .appurl)));
+                                          builder: (context) =>
+                                               SearchScreen(reciptCatList[index]["heading"])));
                                 },
                                 child: Card(
                                     margin:
@@ -266,7 +268,14 @@ class _HomeScreenState extends State<HomeScreen> {
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
                               return InkWell(
-                                  onTap: () {},
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => RecipeView(
+                                                url:
+                                                    recipeList[index].appurl)));
+                                  },
                                   child: Card(
                                     shape: RoundedRectangleBorder(
                                         borderRadius:

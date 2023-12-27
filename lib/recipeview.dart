@@ -22,8 +22,9 @@ class _RecipeViewState extends State<RecipeView> {
   void initState() {
     super.initState();
     WebViewPlatform.instance;
-    WebViewController()
+    controller
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..setBackgroundColor(const Color(0xfffae9c4))
       ..loadRequest(Uri.parse(widget.url));
   }
 

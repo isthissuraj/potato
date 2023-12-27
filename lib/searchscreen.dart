@@ -125,12 +125,17 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   Container(
                     child: isLoading
-                        ? CircularProgressIndicator()
+                        ? CircularProgressIndicator():recipeList.isEmpty? Text("no recipes found")
                         : ListView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             itemCount: recipeList.length,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
+                              if (!mounted) {
+                                return SizedBox.shrink();
+                              }
+                              print("RecipeList length: ${recipeList.length}, Index: $index");
+                              if(index<recipeList.length){
                               return InkWell(
                                   onTap: () {
                                     Navigator.push(
@@ -223,7 +228,8 @@ class _SearchScreenState extends State<SearchScreen> {
                                                 )))
                                       ],
                                     ),
-                                  ));
+                                  )
+                              );}else{return SizedBox.shrink();}
                             }),
                   )
                 ],
