@@ -1,3 +1,4 @@
+
 import 'dart:convert';
 import 'dart:developer';
 
@@ -125,117 +126,134 @@ class _SearchScreenState extends State<SearchScreen> {
                   ),
                   Container(
                     child: isLoading
-                        ? CircularProgressIndicator():recipeList.isEmpty? Text("no recipes found")
+                        ? CircularProgressIndicator()
+                        : recipeList.isEmpty
+                        ? Text("no recipes found")
                         : ListView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            itemCount: recipeList.length,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              if (!mounted) {
-                                return SizedBox.shrink();
-                              }
-                              print("RecipeList length: ${recipeList.length}, Index: $index");
-                              if(index<recipeList.length){
-                              return InkWell(
-                                  onTap: () {
-                                    Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => RecipeView(
-                                                url:
-                                                    recipeList[index].appurl)));
-                                  },
-                                  child: Card(
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(15)),
-                                    margin: EdgeInsets.all(15),
-                                    elevation: 0.0,
-                                    child: Stack(
-                                      children: [
-                                        ClipRRect(
-                                          borderRadius:
-                                              BorderRadius.circular(15),
-                                          child: Image.network(
-                                            recipeList[index].appimgurl,
-                                            fit: BoxFit.cover,
-                                            width: double.infinity,
-                                            height: 200,
-                                          ),
-                                        ),
-                                        Positioned(
-                                            left: 0,
-                                            right: 0,
-                                            bottom: 0,
-                                            child: Container(
-                                              padding: EdgeInsets.all(5),
-                                              decoration: const BoxDecoration(
-                                                  color: Color(0xfffcdfb2),
-                                                  borderRadius:
-                                                      BorderRadius.only(
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  15),
-                                                          bottomRight:
-                                                              Radius.circular(
-                                                                  15))),
-                                              child: Text(
-                                                recipeList[index].applabel,
-                                                style: const TextStyle(
-                                                    color: Color(0xffc29843),
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                              ),
-                                            )),
-                                        Positioned(
-                                            right: 0,
-                                            top: 0,
-                                            height: 40,
-                                            child: Container(
-                                                alignment: Alignment.center,
-                                                padding: EdgeInsets.all(5),
-                                                decoration: BoxDecoration(
-                                                    color: Color(0xfffcdfb2),
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                            topRight: Radius
-                                                                .circular(15),
-                                                            bottomLeft:
-                                                                Radius.circular(
-                                                                    15))),
-                                                child: Row(
-                                                  children: [
-                                                    Icon(
-                                                      Icons
-                                                          .local_fire_department,
-                                                      color: Color.fromARGB(
-                                                          255, 194, 105, 67),
-                                                    ),
-                                                    Text(
-                                                      recipeList[index]
-                                                          .appcalories
-                                                          .toString()
-                                                          .substring(0, 7),
-                                                      style: const TextStyle(
-                                                          color:
-                                                              Color(0xffc29843),
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold),
-                                                    ),
-                                                  ],
-                                                )))
-                                      ],
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: recipeList.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        //helped in removing rangeError:0..6:7
+                        if (!mounted) {
+                          return SizedBox.shrink();
+                        }
+                        print(
+                            "RecipeList length: ${recipeList.length}, Index: $index");
+                        if (index < recipeList.length) {
+                          String calories = recipeList[index]
+                              .appcalories
+                              .toString();
+                          if (calories.length > 7) {
+                            calories = calories.substring(0, 7);
+                          }
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => RecipeView(
+                                    url: recipeList[index].appurl,
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Card(
+                              shape: RoundedRectangleBorder(
+                                borderRadius:
+                                BorderRadius.circular(15),
+                              ),
+                              margin: EdgeInsets.all(15),
+                              elevation: 0.0,
+                              child: Stack(
+                                children: [
+                                  ClipRRect(
+                                    borderRadius:
+                                    BorderRadius.circular(15),
+                                    child: Image.network(
+                                      recipeList[index].appimgurl,
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                      height: 200,
                                     ),
-                                  )
-                              );}else{return SizedBox.shrink();}
-                            }),
-                  )
+                                  ),
+                                  Positioned(
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    child: Container(
+                                      padding: EdgeInsets.all(5),
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xfffcdfb2),
+                                        borderRadius:
+                                        BorderRadius.only(
+                                          bottomLeft:
+                                          Radius.circular(15),
+                                          bottomRight:
+                                          Radius.circular(15),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        recipeList[index].applabel,
+                                        style: const TextStyle(
+                                          color: Color(0xffc29843),
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    right: 0,
+                                    top: 0,
+                                    height: 40,
+                                    child: Container(
+                                      alignment: Alignment.center,
+                                      padding: EdgeInsets.all(5),
+                                      decoration: BoxDecoration(
+                                        color: Color(0xfffcdfb2),
+                                        borderRadius:
+                                        BorderRadius.only(
+                                          topRight:
+                                          Radius.circular(15),
+                                          bottomLeft:
+                                          Radius.circular(15),
+                                        ),
+                                      ),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons
+                                                .local_fire_department,
+                                            color: Color.fromARGB(
+                                                255, 194, 105, 67),
+                                          ),
+                                          Text(
+                                            calories,
+                                            style: const TextStyle(
+                                              color: Color(0xffc29843),
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        } else {
+                          return SizedBox.shrink();
+                        }
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );
