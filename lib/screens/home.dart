@@ -3,9 +3,9 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:potato/model.dart';
-import 'package:potato/recipeview.dart';
-import 'package:potato/searchscreen.dart';
+import 'package:potato/models/model.dart';
+import 'package:potato/screens/recipeview.dart';
+import 'package:potato/screens/searchscreen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -391,7 +391,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                             ],
                                           ),
                                         ));
-                                  }else {
+                                  } else {
                                     return SizedBox.shrink();
                                   }
                                 }),
