@@ -24,7 +24,13 @@ class _HomeScreenState extends State<HomeScreen> {
     "paratha",
     "matar paneer",
     "veg roll",
-    "egg roll"
+    "egg roll",
+    "Idli",
+    "dosa",
+    "tandoori roti",
+    "pyaz paratha",
+    "dum aaloo",
+    "chicken roll"
   ];
 
   String getRandomRecipe() {
