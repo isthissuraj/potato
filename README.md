@@ -9,14 +9,14 @@ Potato is Flutter app that helps you discover new and delicious recipes for any 
 
 # Screenshots
 
-<img src="https://github.com/isthissuraj/potato/assets/112235622/56d77f7c-acf2-4232-bf84-d9f0019ed95f" alt="701shots_so" width="650"/>
+<img src="https://github.com/isthissuraj/potato/assets/112235622/56d77f7c-acf2-4232-bf84-d9f0019ed95f" alt="701shots_so" width="720"/>
 
 
 ## Acknowledgement 
+
 - API: https://developer.edamam.com/edamam-recipe-api
 ## Getting Started
 
-This project is a starting point for a Flutter application.
 
 A few resources to get you started if this is your first Flutter project:
 
